@@ -19,7 +19,7 @@ var app = express();
 
 require('./config/express')(app, config);
 
-app.listen(config.port, function () {
+app.listen(process.env.OPENSHIFT_NODEJS_IP, config.port, function () {
   console.log('Express server listening on port ' + config.port);
 });
 
