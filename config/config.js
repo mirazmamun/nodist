@@ -8,7 +8,7 @@ var config = {
     app: {
       name: 'nodist'
     },
-    port: process.env.PORT || 3000,
+    port: process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000,
     db: 'mongodb://localhost/nodist-development'
   },
 
@@ -26,8 +26,18 @@ var config = {
     app: {
       name: 'nodist'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/nodist-production'
+    port: process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000,
+    db: function () {
+        var connection_string = 'mongodb://localhost/nodist';
+        if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+            connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+            process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+            process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+            process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+            process.env.OPENSHIFT_APP_NAME;
+        }
+        return connection_string;
+    }()
   }
 };
 
